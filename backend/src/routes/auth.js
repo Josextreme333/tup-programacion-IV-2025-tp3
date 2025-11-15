@@ -1,19 +1,36 @@
 const express = require('express');
-const { body } = require('express-validator');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const pool = require('../config/db');
+const bcrypt = require('bcrypt');
 
-router.post('/register',
-  body('nombre').notEmpty().withMessage('nombre es requerido'),
-  body('email').isEmail().withMessage('email invalido'),
-  body('password').isLength({ min: 6 }).withMessage('password minimo 6'),
-  authController.register
-);
+router.post('/register', async (req, res) => {
+    const { nombre, email, password } = req.body;
 
-router.post('/login',
-  body('email').isEmail().withMessage('email invalido'),
-  body('password').notEmpty().withMessage('password requerido'),
-  authController.login
-);
+    if (!nombre || !email || !password) {
+        return res.status(400).json({ msg: 'Faltan datos' });
+    }
+
+    try {
+        // Revisar si el email ya existe
+        const [existing] = await pool.query('SELECT id FROM usuario WHERE email = ?', [email]);
+        if (existing.length > 0) {
+            return res.status(400).json({ msg: 'El email ya está registrado' });
+        }
+
+        // Encriptar contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insertar en la DB
+        const [result] = await pool.query(
+            'INSERT INTO usuario (nombre, email, password) VALUES (?, ?, ?)',
+            [nombre, email, hashedPassword]
+        );
+
+        res.status(201).json({ msg: 'Usuario registrado', userId: result.insertId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Error del servidor' });
+    }
+});
 
 module.exports = router;

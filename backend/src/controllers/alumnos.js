@@ -1,4 +1,4 @@
-const pool = require('../config/db'); // tu conexión a MySQL
+const pool = require('../config/db'); 
 
 // Listar todos los alumnos
 exports.getAlumnos = async (req, res) => {

@@ -6,7 +6,7 @@ import AlumnosList from './pages/AlumnosList';
 import MateriasList from './pages/MateriasList';
 
 function App() {
-  const isLoggedIn = !!localStorage.getItem('token'); // verifica si hay token
+  const isLoggedIn = !!localStorage.getItem('token'); 
 
   return (
     <BrowserRouter>

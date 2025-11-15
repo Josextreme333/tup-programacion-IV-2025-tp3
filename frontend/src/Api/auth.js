@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:3001/api'; // asegúrate de que tu backend corra en este puerto
+const BASE = 'http://localhost:3001/api'; 
 
 export async function register(data) {
   const res = await fetch(`${BASE}/auth/register`, {

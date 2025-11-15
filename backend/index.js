@@ -22,12 +22,5 @@ app.get('/', (req, res) => res.json({ ok: true, msg: 'Backend TP3 funcionando' }
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Backend escuchando en ${PORT}`));
 
-const alumnosRoutes = require('./routes/alumnos');
-const materiasRoutes = require('./routes/materias');
-const notasRoutes = require('./routes/notas');
-
-app.use('/api/alumnos', alumnosRoutes);
-app.use('/api/materias', materiasRoutes);
-app.use('/api/notas', notasRoutes);
 
 
